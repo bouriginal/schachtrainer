@@ -42,6 +42,33 @@ describe('Taktik-Store', () => {
     expect(await repo.getMeta('tacticsRating')).toBe(s.rating)
   })
 
+  it('falscher Zug mit Engine: wird gezeigt, erklärt und widerlegt; danach Neuversuch', async () => {
+    const repo = memoryTrainingRepository()
+    const engine = new FakeEngine()
+    const store = createTacticsStore({ repo, loadPuzzles: async () => PUZZLES, rng: () => 0, now: () => 1, introMs: 0, engine, replyDelayMs: 0 })
+    await store.getState().init()
+    await wait()
+    const start = store.getState().boardFen()
+    expect(store.getState().move('g1', 'f2')).toBe(true) // Zug wird ausgeführt …
+    expect(store.getState().refutation?.explaining).toBe(true)
+    expect(store.getState().boardFen()).not.toBe(start)
+    expect(store.getState().move('e1', 'e8')).toBe(false) // … und blockiert weitere Züge
+    await wait(20)
+    const s = store.getState()
+    expect(s.refutation?.explaining).toBe(false)
+    expect(s.refutation?.moves).toHaveLength(2) // dein Zug + Antwort des Gegners
+    expect(s.feedback?.title).toBe('Kf2 ist nicht die Lösung')
+    expect(s.feedback?.lines.at(-1)).toMatch(/^Der Gegner antwortet …/)
+    expect(s.feedback?.arrowTone).toBe('threat')
+    expect(s.feedback?.lines.join(' ')).not.toMatch(/Besser war/) // Lösung nicht verraten
+    store.getState().retry()
+    expect(store.getState().refutation).toBeNull()
+    expect(store.getState().boardFen()).toBe(start)
+    expect(store.getState().move('e1', 'e8')).toBe(true)
+    expect(store.getState().feedback?.title).toBe('Geschafft – mit Hilfe')
+    expect(await repo.puzzleAttempts()).toMatchObject([{ solved: false }])
+  })
+
   it('falscher Zug: als nicht gelöst gezählt, nach zwei Fehlern Lösungspfeil', async () => {
     const { store, repo } = tactics()
     await store.getState().init()

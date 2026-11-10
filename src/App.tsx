@@ -1,5 +1,5 @@
 import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router'
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { HomePage } from './features/home/HomePage'
 import { MorePage } from './features/home/MorePage'
 import { Icon, type IconName } from './ui/Icon'
@@ -33,8 +33,31 @@ const TABS: { to: string; label: string; icon: IconName; match: (p: string) => b
   },
 ]
 
+/**
+ * Handy: Tab-Leiste beim Runterscrollen ausblenden, beim Hochscrollen zeigen (wie in nativen Apps).
+ * Gesteuert über eine Klasse am <html>, damit auch die Aktionsleiste mitrutschen kann.
+ */
+function useAutoHideTabBar() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.remove('tabbar-hidden')
+    let last = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      const atBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 4
+      if (y < 40 || (y < last - 6 && !atBottom)) root.classList.remove('tabbar-hidden')
+      else if (y > last + 6) root.classList.add('tabbar-hidden')
+      last = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [pathname])
+}
+
 function TabBar() {
   const { pathname } = useLocation()
+  useAutoHideTabBar()
   return (
     <nav className="tab-bar" aria-label="Hauptnavigation">
       {TABS.map((t) => {

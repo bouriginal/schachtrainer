@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { useStore } from 'zustand'
 import { kingSquare, toPgn } from '../../core/chess/game'
@@ -56,10 +56,6 @@ export function PlayPage() {
   const [claudeAvailable, setClaudeAvailable] = useState(false)
   /** Hinweisstufe für die aktuelle Stellung (0 = keiner) */
   const [hint, setHint] = useState<{ fen: string; level: number }>({ fen: '', level: 0 })
-  /** Lesemodus (Handy): kleineres Brett, mehr Platz für Text */
-  const [reading, setReading] = useState(false)
-  const panelRef = useRef<HTMLElement>(null)
-  const hintRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     void fetchClaudeAvailable().then(setClaudeAvailable)
@@ -76,13 +72,6 @@ export function PlayPage() {
   useEffect(() => {
     if (s.review && (s.review.moveClass === 'mistake' || s.review.moveClass === 'blunder')) vibrate('error')
   }, [s.review])
-
-  // Bei einer Pause nach einem Fehler: automatisch Lesemodus, damit die Erklärung Platz hat
-  const [prevPaused, setPrevPaused] = useState(s.paused)
-  if (prevPaused !== s.paused) {
-    setPrevPaused(s.paused)
-    if (s.paused) setReading(true)
-  }
 
   const fen = s.currentFen()
   const last = s.moves[s.moves.length - 1]
@@ -101,13 +90,6 @@ export function PlayPage() {
   const hints = useMemo(() => (playerToMove && currentAnalysis ? buildHints(fen, currentAnalysis) : []), [playerToMove, currentAnalysis, fen])
   const hintLevel = hint.fen === fen ? hint.level : 0
   const shownHint = hintLevel > 0 ? hints[hintLevel - 1] : null
-
-  // Neuer Hinweis: Karte im Panel nach oben holen (nur das Panel scrollen, nie die Seite)
-  useEffect(() => {
-    const panel = panelRef.current
-    const card = hintRef.current
-    if (panel && card && hintLevel > 0) panel.scrollTo({ top: Math.max(0, card.offsetTop - panel.offsetTop - 8), behavior: 'smooth' })
-  }, [hintLevel])
   const activePlan = plans?.find((p) => p.id === selectedPlan) ?? null
 
   // Pfeile/Markierungen des Coaches nur, solange das Brett die besprochene Stellung zeigt
@@ -151,7 +133,7 @@ export function PlayPage() {
   }
 
   return (
-    <div className={`play-layout ${reading ? 'reading' : ''}`}>
+    <div className="play-layout">
       <section className="board-area">
         <EvalBar score={s.evaluation?.fen === fen ? s.evaluation.score : null} orientation={orientation} />
         <Board
@@ -160,9 +142,7 @@ export function PlayPage() {
           movableColor={playerToMove ? s.playerColor : null}
           onMove={(from, to, promo) => {
             setSelectedPlan(null)
-            const ok = store.getState().playerMove(from, to, promo)
-            if (ok) setReading(false)
-            return ok
+            return store.getState().playerMove(from, to, promo)
           }}
           lastMove={last ? { from: last.from, to: last.to } : null}
           checkSquare={s.status.inCheck ? kingSquare(fen, s.status.turn) : null}
@@ -171,11 +151,7 @@ export function PlayPage() {
         />
       </section>
 
-      <aside className="side-panel" ref={panelRef}>
-        <button type="button" className="sheet-handle" onClick={() => setReading((r) => !r)} aria-expanded={reading}>
-          <span className="grip" aria-hidden="true" />
-          {reading ? 'Großes Brett' : 'Mehr Platz für Text'}
-        </button>
+      <aside className="side-panel">
         <div className={`status ${over ? 'status-over' : ''}`} role="status" aria-live="polite">
           <span>{statusText}</span>
           {over && s.moves.length >= 4 && (
@@ -185,7 +161,7 @@ export function PlayPage() {
           )}
         </div>
         {shownHint && (
-          <div className="hint-card" role="status" aria-live="polite" ref={hintRef}>
+          <div className="hint-card" role="status" aria-live="polite">
             <div className="hint-head">
               <span className="hint-badge">💡 Hinweis {shownHint.level}/3</span>
               <strong>{shownHint.title}</strong>
@@ -296,7 +272,7 @@ export function PlayPage() {
             className="primary"
             onClick={() => {
               setSetupOpen((o) => !o)
-              setReading(true)
+              window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
             aria-label="Neue Partie"
           >

@@ -562,3 +562,30 @@ select, textarea { border-radius: 12px; background: var(--surface); }
 }
 /* Karten im Panel nie zusammenstauchen – das Panel scrollt stattdessen */
 .side-panel > * { flex-shrink: 0; }
+
+/* ═════════════ Handy v3: Seite scrollt, Brett immer voll breit ═════════════
+   Safari blendet seine Leisten nur aus, wenn die Seite scrollt – deshalb kein fester
+   Höhen-Rahmen mehr. Die Tab-Leiste verschwindet beim Runterscrollen. */
+@media (max-width: 767px) {
+  .app-header { position: relative; min-height: 46px; padding-top: calc(2px + var(--safe-t)); padding-bottom: 2px; }
+  .brand { font-size: 1.05rem; }
+  .play-layout { height: auto; margin: -12px -12px 0; gap: 0; }
+  .board-area, .trainer-board, .play-layout.reading .board-area { width: 100%; max-width: 100vw; margin: 0; padding-top: 0; }
+  .side-panel { overflow: visible; min-height: 0; padding: 10px 12px 0; }
+  .sheet-handle { display: none !important; }
+
+  .tab-bar { transition: transform .22s ease; will-change: transform; }
+  html.tabbar-hidden .tab-bar { transform: translateY(100%); }
+  .action-bar {
+    position: sticky; bottom: calc(var(--tabbar-h) + var(--safe-b)); z-index: 20;
+    margin: 6px -12px 0; padding: 8px 12px; transition: bottom .22s ease;
+  }
+  html.tabbar-hidden .action-bar { bottom: var(--safe-b); }
+  .app-main { padding-bottom: calc(var(--tabbar-h) + var(--safe-b) + 12px); }
+}
+/* Brett: Ziehen nie mit Scrollen verwechseln */
+.board-wrap, .board-wrap * { touch-action: none; }
+@media (max-width: 767px) {
+  /* versteckte Tab-Leiste: kein leerer Platz am Seitenende */
+  html.tabbar-hidden .app-main { padding-bottom: calc(var(--safe-b) + 12px); }
+}

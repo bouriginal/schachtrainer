@@ -128,10 +128,16 @@ server/claudeProxy.ts     Vite-Middleware /api/coach/{status,explain}; Key aus .
   unterscheidet "decken" (Figur blieb stehen) und "in Sicherheit bringen" (weggezogen).
 - **Design:** Grundwerte als CSS-Variablen ganz am Ende von index.css ("Modernes Design v2"),
   Hell/Dunkel per prefers-color-scheme. Karten: .status/.review/.plan-card/.card … mit --shadow-sm.
-- **Handy-Layout:** Lesemodus `.play-layout.reading` (kleineres Brett), Umschalter `.sheet-handle`.
-  Kinder von `.side-panel` haben flex-shrink: 0 – sonst werden Karten zusammengestaucht.
-- **Handy-Layout (Grundlage):** Brettseiten nutzen `.play-layout` (füllt die Höhe, Brett randlos oben,
-  `.side-panel` scrollt) und eine `.action-bar` als LETZTES Kind des Panels (sticky unten).
+- **Handy-Layout (v3):** Die SEITE scrollt (nicht das Panel) – nur so blendet Safari seine Leisten
+  aus. Brett immer voll breit. Tab-Leiste versteckt sich beim Runterscrollen (`html.tabbar-hidden`,
+  useAutoHideTabBar in App.tsx); `.action-bar` ist sticky und rutscht mit. Kinder von `.side-panel`
+  haben flex-shrink: 0. Auf dem Brett gilt touch-action: none (Ziehen ≠ Scrollen).
+- **Ziehen:** Board.tsx – Zielfelder auch beim Ziehen, Figur schwebt am Touchscreen über dem Finger,
+  Schatten am Startfeld, Drop-Feld markiert; Ablegen auf dem Startfeld = Antippen.
+- **Taktik, falscher Zug:** wird ausgeführt, Coach erklärt (ohne „Besser war …“, sonst wäre die
+  Lösung verraten), Engine spielt die Widerlegung; `retry()` stellt die Aufgabe wieder her.
+- **Handy-Layout (Grundlage):** Brettseiten nutzen `.play-layout` und eine `.action-bar` als LETZTES
+  Kind des Panels (sticky unten).
 - **Lizenz:** Projekt steht unter GPL-3.0-or-later (wegen Stockfish).
 - **Deployment:** GitHub `bouriginal/schachtrainer` (main) → Vercel-Projekt `schachtrainer`, jeder
   Push auf main geht automatisch live unter https://schachtrainer-mu.vercel.app. Commits mit der

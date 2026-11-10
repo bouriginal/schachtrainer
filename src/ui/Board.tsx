@@ -40,6 +40,14 @@ const COLORS = {
   check: 'radial-gradient(circle, rgba(230,0,0,0.85) 0%, rgba(230,0,0,0.35) 45%, transparent 75%)',
 }
 
+/** Touch-Geräte: gezogene Figur über dem Finger schweben lassen, damit sie sichtbar bleibt */
+const coarsePointer = typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches
+const DRAG_STYLE: CSSProperties = coarsePointer
+  ? { transform: 'translateY(-45%) scale(1.45)', filter: 'drop-shadow(0 8px 10px rgba(0,0,0,.35))' }
+  : { transform: 'scale(1.12)', filter: 'drop-shadow(0 6px 8px rgba(0,0,0,.3))', cursor: 'grabbing' }
+const GHOST_STYLE: CSSProperties = { opacity: 0.28 }
+const DROP_STYLE: CSSProperties = { boxShadow: 'inset 0 0 0 4px rgba(255, 255, 255, 0.75)' }
+
 /**
  * Adapter um react-chessboard. Der Rest der App kennt nur diese Schnittstelle,
  * damit die Brett-Bibliothek austauschbar bleibt.
@@ -122,11 +130,26 @@ export function Board({ fen, orientation, movableColor, onMove, lastMove, checkS
           arrows: boardArrows,
           allowDrawingArrows: true,
           clearArrowsOnPositionChange: true,
-          animationDurationInMs: 180,
+          animationDurationInMs: 150,
           allowDragging: canMove,
+          allowDragOffBoard: false,
+          draggingPieceStyle: DRAG_STYLE,
+          draggingPieceGhostStyle: GHOST_STYLE,
+          dropSquareStyle: DROP_STYLE,
+          // beim Ziehen die erlaubten Zielfelder zeigen – wie beim Antippen
+          onPieceDrag: ({ square }) => {
+            if (square && canMove) setSelected(square)
+          },
           canDragPiece: ({ piece }) => canMove && ownPieceOn(piece.pieceType),
-          onPieceDrop: ({ sourceSquare, targetSquare }) =>
-            targetSquare ? tryMove(sourceSquare, targetSquare) : false,
+          onPieceDrop: ({ sourceSquare, targetSquare }) => {
+            if (!targetSquare) return false
+            // auf dem eigenen Feld fallen gelassen = wie Antippen: Figur bleibt ausgewählt
+            if (targetSquare === sourceSquare) {
+              setSelected(sourceSquare)
+              return false
+            }
+            return tryMove(sourceSquare, targetSquare)
+          },
           onSquareClick: ({ square, piece }) => {
             if (!canMove) return
             if (selected && targets.includes(square as never)) {

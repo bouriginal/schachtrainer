@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { useStore } from 'zustand'
 import type { Difficulty, Puzzle } from '../../core/tactics/puzzle'
 import { THEMES } from '../../core/tactics/themes'
-import { getTrainingRepository } from '../../services'
+import { getEngine, getTrainingRepository } from '../../services'
 import { Board, type BoardArrow, type BoardHighlight } from '../../ui/Board'
 import { createTacticsStore } from './tacticsStore'
 import { playResultSound, vibrate } from '../../ui/feedback'
@@ -19,7 +19,7 @@ const DIFFICULTIES: [Difficulty, string][] = [
 ]
 
 export function TacticsPage() {
-  const [store] = useState(() => createTacticsStore({ repo: getTrainingRepository(), loadPuzzles }))
+  const [store] = useState(() => createTacticsStore({ repo: getTrainingRepository(), loadPuzzles, engine: getEngine() }))
   const s = useStore(store)
   const [params] = useSearchParams()
   const initialTheme = params.get('motiv')
@@ -40,9 +40,11 @@ export function TacticsPage() {
     if (fbTone === 'solved') playResultSound(true)
   }, [fbTone, fbTitle])
   const cur = s.current
-  const playing = !!cur && cur.status === 'playing' && !s.intro
+  const playing = !!cur && cur.status === 'playing' && !s.intro && !s.refutation
   const last = s.lastMove()
-  const arrows: BoardArrow[] = fb?.arrow ? [{ from: fb.arrow.from, to: fb.arrow.to, color: 'rgba(22, 163, 74, 0.85)' }] : []
+  const arrows: BoardArrow[] = fb?.arrow
+    ? [{ from: fb.arrow.from, to: fb.arrow.to, color: fb.arrowTone === 'threat' ? 'rgba(220, 38, 38, 0.85)' : 'rgba(22, 163, 74, 0.85)' }]
+    : []
   const highlights: Record<string, BoardHighlight> = {}
   if (fb?.hintSquare) highlights[fb.hintSquare] = 'plan'
 
@@ -84,6 +86,16 @@ export function TacticsPage() {
           </span>
         </div>
 
+        {fb && (
+          <div className={`review trainer-fb fb-${fb.tone === 'solved' ? 'done' : fb.tone === 'failed' ? 'wrong' : fb.tone}`} role="status" aria-live="polite">
+            <div className="review-badge">{fb.title}</div>
+            {fb.lines.filter(Boolean).map((l, i) => (
+              <p key={i}>{l}</p>
+            ))}
+            {cur && cur.status === 'solved' && <p className="muted small">Aufgabe {cur.puzzle.id} · Schwierigkeit {cur.puzzle.rating}</p>}
+          </div>
+        )}
+
         <div className="filters">
           <label>
             Motiv
@@ -106,16 +118,6 @@ export function TacticsPage() {
           </div>
         </div>
 
-        {fb && (
-          <div className={`review trainer-fb fb-${fb.tone === 'solved' ? 'done' : fb.tone === 'failed' ? 'wrong' : fb.tone}`} role="status" aria-live="polite">
-            <div className="review-badge">{fb.title}</div>
-            {fb.lines.filter(Boolean).map((l, i) => (
-              <p key={i}>{l}</p>
-            ))}
-            {cur && cur.status === 'solved' && <p className="muted small">Aufgabe {cur.puzzle.id} · Schwierigkeit {cur.puzzle.rating}</p>}
-          </div>
-        )}
-
         <details className="settings">
           <summary>Fortschritt je Motiv</summary>
           <ul className="theme-stats">
@@ -135,6 +137,16 @@ export function TacticsPage() {
         </details>
 
         <div className="button-row action-bar">
+          {s.refutation && (
+            <button type="button" className="primary" onClick={() => s.retry()} disabled={s.refutation.explaining}>
+              ↶ Nochmal versuchen
+            </button>
+          )}
+          {s.refutation && (
+            <button type="button" onClick={() => s.showSolution()}>
+              Lösung zeigen
+            </button>
+          )}
           {playing && (
             <>
               <button type="button" onClick={() => s.hint()} disabled={s.hints >= 2}>
@@ -145,7 +157,7 @@ export function TacticsPage() {
               </button>
             </>
           )}
-          <button type="button" className={cur?.status === 'solved' ? 'primary' : ''} onClick={() => s.next()}>
+          <button type="button" className={cur?.status === 'solved' ? 'primary' : ''} onClick={() => s.next()} hidden={!!s.refutation}>
             {cur?.status === 'solved' ? 'Nächste Aufgabe →' : 'Überspringen'}
           </button>
         </div>
