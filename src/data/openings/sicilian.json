@@ -1,0 +1,134 @@
+{
+  "id": "sicilian",
+  "name": "Sizilianisch (mit …e6)",
+  "color": "b",
+  "tagline": "Schwarz gegen 1.e4 · kämpferisch, ungleiche Bauernstruktur",
+  "summary": "Mit 1…c5 kämpfst du von der Seite um d4. Nach dem Tausch c5×d4 hast du einen Zentrumsbauern mehr und die halboffene c-Linie. Wir spielen einen …e6-Aufbau (Taimanow): flexibel, mit wenig Theorie und klaren Ideen.",
+  "ideas": [
+    {
+      "title": "Die halboffene c-Linie",
+      "text": "Nach …c×d4 gehört die c-Linie dir. Turm oder Dame nach c8/c7 und Druck auf c3/c2."
+    },
+    {
+      "title": "Der Befreiungsschlag …d5",
+      "text": "Wenn …d5 ohne Figurenverlust geht, ist Schwarz meistens gut: Das Zentrum öffnet sich, deine Figuren werden aktiv."
+    },
+    {
+      "title": "…a6 und …b5",
+      "text": "Der kleine Bauernzug …a6 nimmt dem weißen Springer b5 und bereitet …b5 mit Raumgewinn am Damenflügel vor."
+    },
+    {
+      "title": "Gegenspiel statt Passivität",
+      "text": "Weiß greift oft am Königsflügel an. Deine Antwort ist Gegenspiel am Damenflügel und im Zentrum – nicht nur verteidigen."
+    }
+  ],
+  "lines": [
+    {
+      "id": "taimanov",
+      "name": "Offene Variante: Taimanow mit 5.Sc3",
+      "summary": "Der Hauptweg. Dame nach c7, …a6, dann der Springer ins Zentrum nach e5.",
+      "moves": [
+        { "san": "e4", "why": "Weiß besetzt das Zentrum." },
+        { "san": "c5", "why": "Du kämpfst von der Seite um d4, ohne Weiß ein festes Zentrum zu überlassen." },
+        { "san": "Nf3", "why": "Weiß bereitet d4 vor." },
+        { "san": "e6", "why": "Flexibel: kontrolliert d5 und öffnet den Läufer f8. Nach Lb5 gibt es keine Fesselung, weil der Springer noch nicht auf c6 steht." },
+        { "san": "d4", "why": "Weiß öffnet das Zentrum." },
+        { "san": "cxd4", "why": "Du tauschst deinen Flügelbauern gegen den weißen Zentrumsbauern – das ist die Idee von Sizilianisch." },
+        { "san": "Nxd4", "why": "Weiß nimmt mit dem Springer zurück und hat einen Entwicklungsvorsprung." },
+        { "san": "Nc6", "why": "Greift den Springer d4 an und entwickelt." },
+        { "san": "Nc3", "why": "Weiß deckt e4 und entwickelt." },
+        { "san": "Qc7", "why": "Die Dame steht auf der halboffenen c-Linie und kontrolliert e5." },
+        { "san": "Be3", "why": "Weiß entwickelt den Läufer und deckt d4." },
+        { "san": "a6", "why": "Nimmt dem weißen Springer das Feld b5 und bereitet …b5 vor." },
+        { "san": "Bd3", "why": "Weiß deckt e4 und bereitet die Rochade vor." },
+        { "san": "Nf6", "why": "Entwicklung mit Angriff auf e4." },
+        { "san": "O-O", "why": "Weiß rochiert." },
+        { "san": "Ne5", "why": "Der Springer springt ins Zentrum und droht …Sg4 gegen den Läufer e3 bzw. …Sxd3." },
+        { "san": "h3", "why": "Weiß verhindert …Sg4." },
+        { "san": "Bc5", "why": "Der Läufer kommt aktiv raus und erhöht den Druck auf d4. Es folgen Rochade und …d6 oder …b5." }
+      ]
+    },
+    {
+      "id": "nb5",
+      "name": "Offene Variante mit 5.Sb5",
+      "summary": "Weiß zielt auf d6. Du spielst …d6, …a6 und bekommst eine kompakte Igel-Stellung.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c5" },
+        { "san": "Nf3" },
+        { "san": "e6" },
+        { "san": "d4" },
+        { "san": "cxd4" },
+        { "san": "Nxd4" },
+        { "san": "Nc6" },
+        { "san": "Nb5", "why": "Weiß springt nach b5 und droht Sd6+ – ein Springer auf d6 wäre ein Albtraum." },
+        { "san": "d6", "why": "Deckt das Feld d6. Dein Bauer steht jetzt auf d6 – typisch für Sizilianisch." },
+        { "san": "c4", "why": "Weiß baut einen Maroczy-Aufbau: Die Bauern c4 und e4 kontrollieren d5." },
+        { "san": "Nf6", "why": "Entwicklung mit Druck auf e4." },
+        { "san": "N1c3", "why": "Weiß deckt e4 mit dem zweiten Springer." },
+        { "san": "a6", "why": "Vertreibt den Springer von b5." },
+        { "san": "Na3", "why": "Der Springer zieht sich zurück; er will über c2 wieder ins Spiel." },
+        { "san": "Be7", "why": "Entwicklung, Rochade vorbereiten." },
+        { "san": "Be2", "why": "Weiß bereitet die Rochade vor." },
+        { "san": "O-O", "why": "König in Sicherheit." },
+        { "san": "O-O", "why": "Weiß rochiert ebenfalls." },
+        { "san": "b6", "why": "Der Igel: Der Läufer kommt nach b7, die Türme nach c8 und d8. Später befreist du dich mit …b5 oder …d5." }
+      ]
+    },
+    {
+      "id": "alapin",
+      "name": "Alapin-Variante 2.c3",
+      "summary": "Weiß will mit d4 ein volles Bauernzentrum bauen. Du schlägst mit …d5 sofort zurück.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c5" },
+        { "san": "c3", "why": "Weiß bereitet d4 vor, um nach …c×d4 mit dem Bauern zurückzuschlagen." },
+        { "san": "d5", "why": "Der direkte Gegenschlag im Zentrum, bevor Weiß d4 spielen kann." },
+        { "san": "exd5", "why": "Weiß tauscht." },
+        { "san": "Qxd5", "why": "Die Dame nimmt zurück. Sie steht im Zentrum sicher, weil Weiß sie nicht mit Sc3 angreifen kann – der Bauer steht auf c3." },
+        { "san": "d4", "why": "Weiß baut das Zentrum." },
+        { "san": "Nf6", "why": "Entwicklung." },
+        { "san": "Nf3", "why": "Weiß entwickelt sich." },
+        { "san": "Bg4", "why": "Der Läufer kommt raus, BEVOR …e6 ihn einsperrt, und fesselt den Springer." },
+        { "san": "Be2", "why": "Weiß löst die Fesselung." },
+        { "san": "e6", "why": "Jetzt …e6: Der Läufer f8 kann raus." },
+        { "san": "O-O", "why": "Weiß rochiert." },
+        { "san": "Nc6", "why": "Mehr Druck auf d4. Weiter mit …c×d4, …Le7 und Rochade." }
+      ]
+    },
+    {
+      "id": "grand-prix",
+      "name": "Grand-Prix-Angriff 2.Sc3 und 3.f4",
+      "summary": "Weiß will am Königsflügel angreifen. Du antwortest mit …d5 im Zentrum.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c5" },
+        { "san": "Nc3", "why": "Weiß spielt eine geschlossene Variante." },
+        { "san": "e6", "why": "Bereitet …d5 vor." },
+        { "san": "f4", "why": "Weiß plant einen Angriff am Königsflügel." },
+        { "san": "d5", "why": "Die beste Antwort auf einen Flügelangriff: Gegenschlag im Zentrum." },
+        { "san": "Nf3", "why": "Weiß entwickelt sich." },
+        { "san": "Nf6", "why": "Entwicklung mit Druck auf e4." },
+        { "san": "e5", "why": "Weiß gewinnt Raum und vertreibt deinen Springer." },
+        { "san": "Nfd7", "why": "Der Springer zieht sich zurück – eine Stellung wie in der Französischen Verteidigung. Weiter mit …Sc6, …Le7 und Angriff auf die Bauernkette mit …f6." }
+      ]
+    },
+    {
+      "id": "smith-morra",
+      "name": "Smith-Morra-Gambit 2.d4 cxd4 3.c3",
+      "summary": "Weiß opfert einen Bauern. Du lehnst die Annahme ab und greifst e4 an.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c5" },
+        { "san": "d4", "why": "Weiß bietet ein Gambit an." },
+        { "san": "cxd4", "why": "Du nimmst den Bauern." },
+        { "san": "c3", "why": "Weiß bietet den nächsten Bauern an, um schnell zu entwickeln." },
+        { "san": "Nf6", "why": "Statt weiter zu nehmen, greifst du e4 an – ruhig und sicher." },
+        { "san": "e5", "why": "Weiß vertreibt den Springer." },
+        { "san": "Nd5", "why": "Der Springer steht im Zentrum gut." },
+        { "san": "Nf3", "why": "Weiß entwickelt sich." },
+        { "san": "Nc6", "why": "Entwicklung mit Druck auf e5. Weiter mit …d6 oder …e6 – eine Stellung wie in der Alapin-Variante." }
+      ]
+    }
+  ]
+}

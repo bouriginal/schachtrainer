@@ -1,0 +1,115 @@
+{
+  "id": "caro-kann",
+  "name": "Caro-Kann",
+  "color": "b",
+  "tagline": "Schwarz gegen 1.e4 · solide, klar, leicht zu planen",
+  "summary": "Mit 1…c6 und 2…d5 greifst du das weiße Zentrum an, ohne Schwächen einzugehen. Dein heller Läufer kommt meistens VOR …e6 heraus – das ist der große Vorteil gegenüber der Französischen Verteidigung.",
+  "ideas": [
+    {
+      "title": "Erst der Läufer, dann …e6",
+      "text": "Bring den Läufer c8 nach f5 oder g4, bevor du …e6 spielst. Sonst ist er hinter den eigenen Bauern eingesperrt."
+    },
+    {
+      "title": "Gegen den Vorstoß e5: …c5",
+      "text": "Wenn Weiß e5 spielt, greifst du die Bauernkette an ihrer Basis an: …c5 gegen d4."
+    },
+    {
+      "title": "Sicher statt schnell",
+      "text": "Caro-Kann ist eine Verteidigung für Geduldige: erst sicher entwickeln und rochieren, dann im Endspiel von der guten Bauernstruktur profitieren."
+    },
+    {
+      "title": "Minoritätsangriff beachten",
+      "text": "In der Abtauschvariante greift Weiß oft am Damenflügel mit b4–b5 an. Du antwortest mit Figurenspiel am Königsflügel."
+    }
+  ],
+  "lines": [
+    {
+      "id": "advance",
+      "name": "Vorstoßvariante 3.e5",
+      "summary": "Weiß gewinnt Raum. Du entwickelst den Läufer nach f5 und greifst mit …c5 die Kette an.",
+      "moves": [
+        { "san": "e4", "why": "Weiß besetzt das Zentrum." },
+        { "san": "c6", "why": "Bereitet …d5 vor: Der Bauer c6 deckt d5, so dass du auf d5 mit einem Bauern zurückschlagen kannst." },
+        { "san": "d4", "why": "Weiß baut ein großes Zentrum." },
+        { "san": "d5", "why": "Du greifst e4 sofort an. Das ist der Kern der Caro-Kann-Verteidigung." },
+        { "san": "e5", "why": "Weiß weicht dem Tausch aus und gewinnt Raum." },
+        { "san": "Bf5", "why": "Der Läufer kommt raus, BEVOR …e6 ihn einsperrt. Auf f5 steht er aktiv." },
+        { "san": "Nf3", "why": "Weiß entwickelt sich ruhig." },
+        { "san": "e6", "why": "Jetzt erst …e6: Es öffnet den Läufer f8 und stützt d5." },
+        { "san": "Be2", "why": "Weiß bereitet die Rochade vor." },
+        { "san": "c5", "why": "Der typische Gegenschlag: Du greifst die weiße Bauernkette an ihrer Basis d4 an." },
+        { "san": "O-O", "why": "Weiß bringt den König in Sicherheit." },
+        { "san": "Nc6", "why": "Noch mehr Druck auf d4." },
+        { "san": "c3", "why": "Weiß stützt d4." },
+        { "san": "cxd4", "why": "Du öffnest die c-Linie für deine Türme." },
+        { "san": "cxd4", "why": "Weiß nimmt mit dem Bauern zurück und behält das Zentrum." },
+        { "san": "Nge7", "why": "Der Springer geht über e7 – nach f6 kann er wegen e5 nicht. Von e7 kann er nach c8–b6 oder f5 weiter und schützt den Läufer f5. Danach: …Sc8–b6 oder …Sg6, Rochade und Druck auf d4." }
+      ]
+    },
+    {
+      "id": "classical",
+      "name": "Klassische Variante 3.Sc3 dxe4",
+      "summary": "Du tauschst im Zentrum, entwickelst den Läufer mit Tempo und bekommst eine sehr solide Stellung.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c6" },
+        { "san": "d4" },
+        { "san": "d5" },
+        { "san": "Nc3", "why": "Weiß deckt e4 mit dem Springer." },
+        { "san": "dxe4", "why": "Du tauschst im Zentrum. Danach kannst du den weißen Springer auf e4 mit Tempo angreifen." },
+        { "san": "Nxe4", "why": "Weiß nimmt zurück." },
+        { "san": "Bf5", "why": "Der Läufer kommt mit Tempo raus: Er greift den Springer e4 an." },
+        { "san": "Ng3", "why": "Weiß greift den Läufer an." },
+        { "san": "Bg6", "why": "Der Läufer weicht aus und bleibt auf der guten Diagonale." },
+        { "san": "h4", "why": "Weiß droht h5 mit Fang des Läufers." },
+        { "san": "h6", "why": "Du schaffst ein Rückzugsfeld: Nach h5 kann der Läufer nach h7." },
+        { "san": "Nf3", "why": "Weiß entwickelt sich." },
+        { "san": "Nd7", "why": "Der Springer verhindert Se5, das deinen Läufer g6 angreifen würde, und bereitet …Sgf6 vor." },
+        { "san": "h5", "why": "Weiß gewinnt Raum am Königsflügel." },
+        { "san": "Bh7", "why": "Der Läufer zieht sich zurück, bleibt aber auf der Diagonale b1–h7." },
+        { "san": "Bd3", "why": "Weiß bietet den Läufertausch an." },
+        { "san": "Bxd3", "why": "Du tauschst: Ein Figurenpaar weniger macht deine enge Stellung freier." },
+        { "san": "Qxd3", "why": "Weiß nimmt mit der Dame zurück." },
+        { "san": "e6", "why": "Jetzt …e6: Der Läufer f8 kann raus. Es folgen …Sgf6, …Le7 oder …Dc7 und die lange oder kurze Rochade." }
+      ]
+    },
+    {
+      "id": "exchange",
+      "name": "Abtauschvariante 3.exd5",
+      "summary": "Symmetrische Bauern, ruhiges Spiel. Du entwickelst den Läufer nach g4 und hältst b7 im Blick.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c6" },
+        { "san": "d4" },
+        { "san": "d5" },
+        { "san": "exd5", "why": "Weiß tauscht im Zentrum." },
+        { "san": "cxd5", "why": "Du nimmst mit dem c-Bauern zurück – dafür hast du ihn nach c6 gestellt." },
+        { "san": "Bd3", "why": "Weiß zielt auf h7 und verhindert …Lf5." },
+        { "san": "Nc6", "why": "Entwicklung mit Druck auf d4." },
+        { "san": "c3", "why": "Weiß stützt d4." },
+        { "san": "Nf6", "why": "Der zweite Springer kommt und deckt d5 und h7." },
+        { "san": "Bf4", "why": "Weiß entwickelt den Läufer auf eine aktive Diagonale." },
+        { "san": "Bg4", "why": "Der Läufer kommt raus – vor …e6 – und greift die Dame d1 an." },
+        { "san": "Qb3", "why": "Die Dame weicht mit Angriff auf b7 und d5 aus." },
+        { "san": "Qd7", "why": "Deckt b7 entlang der 7. Reihe und verbindet sich mit dem Läufer g4. Es folgen …e6, …Ld6 und Rochade." }
+      ]
+    },
+    {
+      "id": "two-knights",
+      "name": "Zwei Springer 2.Sc3 und 3.Sf3",
+      "summary": "Weiß entwickelt erst die Springer. Du tauschst den Läufer gegen den Springer f3 und spielst solide …e6.",
+      "moves": [
+        { "san": "e4" },
+        { "san": "c6" },
+        { "san": "Nc3", "why": "Weiß deckt e4 sofort mit dem Springer." },
+        { "san": "d5", "why": "Wie immer: Angriff auf e4." },
+        { "san": "Nf3", "why": "Weiß entwickelt auch den zweiten Springer." },
+        { "san": "Bg4", "why": "Der Läufer fesselt den Springer an die Dame – wieder kommt er vor …e6 heraus." },
+        { "san": "h3", "why": "Weiß stellt den Läufer zur Rede." },
+        { "san": "Bxf3", "why": "Du tauschst Läufer gegen Springer. Dafür bekommst du eine solide Stellung ohne Schwächen." },
+        { "san": "Qxf3", "why": "Weiß nimmt mit der Dame zurück und hat das Läuferpaar." },
+        { "san": "e6", "why": "Jetzt …e6: d5 ist fest gestützt, der Läufer f8 kann raus. Es folgen …Sf6, …Ld6 oder …Lb4 und Rochade." }
+      ]
+    }
+  ]
+}

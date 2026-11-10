@@ -1,0 +1,127 @@
+{
+  "endgames": [
+    {
+      "id": "kq-k",
+      "category": "Grundmatts",
+      "title": "Dame und König gegen König",
+      "fen": "8/8/8/4k3/8/8/8/3QK3 w - - 0 1",
+      "goal": "mate",
+      "lesson": "Mit der Dame den König Schritt für Schritt an den Rand drängen, dann den eigenen König zum Mattsetzen holen.",
+      "hints": [
+        "Stell die Dame einen Springerzug vom gegnerischen König entfernt auf – so schrumpft sein Käfig, ohne Schach zu geben.",
+        "Ziehe die Dame immer im Springerabstand mit, bis der König am Rand steht.",
+        "Jetzt nicht mehr mit der Dame drängen! Hol deinen König heran – sonst droht Patt.",
+        "Wenn dein König den gegnerischen König bewacht, setzt die Dame auf dem Rand matt."
+      ]
+    },
+    {
+      "id": "kr-k",
+      "category": "Grundmatts",
+      "title": "Turm und König gegen König",
+      "fen": "8/8/8/4k3/8/8/8/R3K3 w - - 0 1",
+      "goal": "mate",
+      "lesson": "Der Turm baut einen Käfig (die „Kastenmethode“), der König hilft ihn zu verkleinern. Allein kann der Turm nicht mattsetzen.",
+      "hints": [
+        "Schneide den König mit dem Turm ab: Er darf eine Linie oder Reihe nicht überschreiten.",
+        "Bring deinen König heran – Turm und König arbeiten zusammen.",
+        "Stehen sich die Könige gegenüber (Opposition), gibt der Turm Schach und drängt eine Reihe weiter.",
+        "Hängt dein Turm? Zieh ihn ans andere Ende der Reihe, weit weg vom König."
+      ]
+    },
+    {
+      "id": "krr-k",
+      "category": "Grundmatts",
+      "title": "Zwei Türme: das Treppenmatt",
+      "fen": "8/8/3k4/8/8/8/8/R3K2R w - - 0 1",
+      "goal": "mate",
+      "lesson": "Zwei Türme setzen ohne Hilfe des Königs matt: Abwechselnd geben sie Schach und schieben den König Reihe für Reihe an den Rand.",
+      "hints": [
+        "Ein Turm sperrt eine Reihe ab, der andere gibt auf der nächsten Reihe Schach.",
+        "Kommt der König einem Turm zu nahe, zieh den Turm ganz an die andere Seite des Bretts.",
+        "Wiederhole das Treppenmuster, bis der König auf der Grundreihe steht."
+      ]
+    },
+    {
+      "id": "square-rule",
+      "category": "Bauernendspiele",
+      "title": "Die Quadratregel",
+      "fen": "8/8/5k2/8/P7/8/8/7K w - - 0 1",
+      "goal": "promote",
+      "lesson": "Zeichne gedanklich ein Quadrat vom Bauern bis zur Umwandlungsreihe. Steht der gegnerische König nicht darin (bzw. kann nicht hineinziehen), läuft der Bauer allein durch.",
+      "hints": [
+        "Zähl das Quadrat: vom Bauern a5 bis a8 sind es drei Felder – das Quadrat geht bis zur d-Linie.",
+        "Der schwarze König auf f6 erreicht das Quadrat nicht, wenn du sofort ziehst.",
+        "Einfach laufen lassen! Der König wird nicht gebraucht."
+      ]
+    },
+    {
+      "id": "king-in-front",
+      "category": "Bauernendspiele",
+      "title": "König vor dem Bauern",
+      "fen": "4k3/8/4K3/4P3/8/8/8/8 w - - 0 1",
+      "goal": "promote",
+      "lesson": "Steht dein König auf der 6. Reihe vor dem eigenen Bauern, gewinnst du immer – egal, wer am Zug ist. Der König bahnt dem Bauern den Weg.",
+      "hints": [
+        "Nicht sofort den Bauern ziehen – zuerst der König!",
+        "Geh mit dem König seitlich vor (Kd6 oder Kf6), um dem Bauern die Felder e7 und e8 freizuräumen.",
+        "Der Bauer zieht erst, wenn der König die Umwandlungsfelder kontrolliert."
+      ]
+    },
+    {
+      "id": "opposition",
+      "category": "Bauernendspiele",
+      "title": "Opposition mit Reservezug",
+      "fen": "8/8/4k3/8/4K3/8/4P3/8 w - - 0 1",
+      "goal": "promote",
+      "lesson": "Opposition: Die Könige stehen sich mit einem Feld Abstand gegenüber, und der Gegner muss ziehen – dann muss er ausweichen. Ein Bauernzug als Reservezug kann dir die Opposition schenken.",
+      "hints": [
+        "Wer jetzt einen Königszug macht, verliert die Opposition.",
+        "Nutze den Bauernzug e2–e3 als Reservezug: Danach muss Schwarz mit dem König ausweichen.",
+        "Weicht der König aus, geh mit deinem König nach vorn – immer vor den Bauern, nicht neben ihn.",
+        "Kommt dein König auf die 6. Reihe vor den Bauern, ist es gewonnen."
+      ]
+    },
+    {
+      "id": "lucena",
+      "category": "Turmendspiele",
+      "title": "Lucena-Stellung: der Brückenbau",
+      "fen": "1K1k4/1P6/8/8/8/8/r7/2R5 w - - 0 1",
+      "goal": "promote",
+      "lesson": "Die wichtigste Gewinnstellung im Turmendspiel. Dein König steht vor dem Bauern, wird aber eingesperrt. Mit einer „Brücke“ – dem Turm auf der 4. Reihe – schützt du ihn vor den Seitenschachs.",
+      "hints": [
+        "Zuerst mit Schach den gegnerischen König weiter abdrängen: Td1+.",
+        "Dann den Turm auf die 4. Reihe stellen (Td4) – das ist die Brücke.",
+        "Jetzt verlässt dein König das Eckfeld. Die Seitenschachs des Turms laufen sich an der Brücke tot.",
+        "Wenn der Turm von hinten Schach gibt, stellt sich dein Turm dazwischen."
+      ]
+    },
+    {
+      "id": "philidor",
+      "category": "Turmendspiele",
+      "title": "Philidor-Stellung: Remis halten",
+      "fen": "4k3/7R/1r6/3KP3/8/8/8/8 b - - 0 1",
+      "goal": "draw",
+      "surviveMoves": 20,
+      "lesson": "Die wichtigste Verteidigungsstellung: Dein Turm hält die 6. Reihe, damit der weiße König nicht vorrücken kann. Erst wenn der Bauer auf die 6. Reihe zieht, geht der Turm nach hinten und gibt von dort Schach.",
+      "hints": [
+        "Lass den Turm auf der 6. Reihe – er versperrt dem weißen König den Weg.",
+        "Pendle mit dem Turm auf der 6. Reihe hin und her, solange der Bauer auf e5 bleibt.",
+        "Zieht der Bauer nach e6, nimmt er dem König die Deckung: Jetzt geht dein Turm auf die 1. Reihe und gibt von hinten Schach."
+      ]
+    },
+    {
+      "id": "kp-defence",
+      "category": "Bauernendspiele",
+      "title": "Verteidigung: König vor den Bauern",
+      "fen": "8/8/4k3/8/4P3/4K3/8/8 b - - 0 1",
+      "goal": "draw",
+      "surviveMoves": 20,
+      "lesson": "Als Verteidiger gehört dein König direkt vor den gegnerischen Bauern. Nimm die Opposition, und wenn du zurückweichen musst, dann gerade nach hinten – nie zur Seite.",
+      "hints": [
+        "Stell dich mit dem König vor den Bauern: …Ke5 blockiert ihn.",
+        "Musst du weichen, geh gerade zurück auf die Linie des Bauern.",
+        "Steht dein König auf der Grundreihe vor dem Bauern, nimm die Opposition, sobald der weiße König auf die 6. Reihe kommt."
+      ]
+    }
+  ]
+}

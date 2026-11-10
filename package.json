@@ -1,0 +1,46 @@
+{
+  "name": "schachtrainer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copy-engine.mjs",
+    "dev": "node scripts/copy-engine.mjs && vite",
+    "build": "node scripts/copy-engine.mjs && tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -b",
+    "lint": "oxlint",
+    "check": "tsc -b && oxlint && vitest run",
+    "test:engine": "vitest run --config vitest.engine.config.ts",
+    "puzzles": "node scripts/build-puzzles.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0",
+    "chess.js": "^1.4.0",
+    "dexie": "^4.4.7",
+    "react": "^19.3.1",
+    "react-chessboard": "^5.12.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^7.18.5",
+    "stockfish": "^19.0.1",
+    "ts-fsrs": "^6.0.0",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "fake-indexeddb": "^6.2.8",
+    "jsdom": "^31.0.0",
+    "oxlint": "^1.90.0",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.6",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.1.0"
+  }
+}

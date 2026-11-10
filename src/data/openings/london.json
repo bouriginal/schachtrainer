@@ -1,0 +1,127 @@
+{
+  "id": "london",
+  "name": "Londoner System",
+  "color": "w",
+  "tagline": "Weiß · 1.d4 mit Lf4 – ein fester Aufbau gegen fast alles",
+  "summary": "Im Londoner System baust du fast immer dieselbe Stellung auf: Bauern d4, e3, c3, Läufer auf f4 und d3, Springer auf d2 und f3, dann Rochade. Du musst wenig auswendig lernen und kannst dich auf Pläne konzentrieren.",
+  "ideas": [
+    {
+      "title": "Der Aufbau zuerst",
+      "text": "d4, Lf4, e3, Sf3, Ld3, c3, Sbd2, 0-0. Die Reihenfolge passt du an die Drohungen des Gegners an – das Ziel bleibt gleich."
+    },
+    {
+      "title": "Läufer f4 vor e3",
+      "text": "Der Läufer muss raus, bevor e3 gespielt wird – sonst sperrt der eigene Bauer ihn ein."
+    },
+    {
+      "title": "Achtung auf b2",
+      "text": "Weil der Läufer c1 weg ist, ist b2 schwach. Gegen …Db6 helfen Db3, Dc1 oder Sc3 mit Trick auf b5."
+    },
+    {
+      "title": "Typischer Angriffsplan",
+      "text": "Springer nach e5, Bauer nach f4, dann Df3/Dh5 oder Tf3–h3 gegen den rochierten König."
+    },
+    {
+      "title": "Den Läufer behalten",
+      "text": "Will Schwarz mit …Ld6 den Läufer tauschen, zieht er nach g3 zurück. Gegen …Sh5 hilft ein Fluchtfeld mit h3."
+    }
+  ],
+  "lines": [
+    {
+      "id": "main-e6",
+      "name": "Hauptlinie gegen …d5 und …e6",
+      "summary": "Der Standardaufbau. Am Ende steht dein ganzes Lager bereit, und es geht mit Se5 und f4 in den Angriff.",
+      "moves": [
+        { "san": "d4", "why": "Der Bauer besetzt das Zentrum und öffnet dem Läufer c1 den Weg." },
+        { "san": "d5", "why": "Schwarz hält im Zentrum dagegen." },
+        { "san": "Bf4", "why": "Das Markenzeichen des Londoner Systems: Der Läufer kommt raus, BEVOR e3 ihn einsperrt. Von f4 kontrolliert er e5." },
+        { "san": "Nf6", "why": "Schwarz entwickelt den Springer und deckt d5." },
+        { "san": "e3", "why": "Stützt d4 und öffnet den Weg für den Läufer f1." },
+        { "san": "e6", "why": "Schwarz öffnet seinem Läufer f8 die Diagonale." },
+        { "san": "Nf3", "why": "Entwicklung Richtung Zentrum. Der Springer deckt d4 und schaut nach e5." },
+        { "san": "Bd6", "why": "Schwarz bietet den Läufertausch an – sein Läufer d6 ist das Gegenstück zu deinem Läufer f4." },
+        { "san": "Bg3", "why": "Du weichst dem Tausch aus und behältst deinen guten Läufer. Nimmt Schwarz auf g3, öffnet hxg3 dir die h-Linie für den Turm." },
+        { "san": "O-O", "why": "Schwarz bringt den König in Sicherheit." },
+        { "san": "Bd3", "why": "Der Läufer zielt auf h7 – also auf den rochierten König von Schwarz." },
+        { "san": "c5", "why": "Schwarz greift dein Zentrum von der Seite an. Das ist sein wichtigster Gegenplan." },
+        { "san": "c3", "why": "Stützt d4 gegen …c5 und gibt der Dame später das Feld c2 oder b3. Das Bauerndreieck c3–d4–e3 ist sehr stabil." },
+        { "san": "Nc6", "why": "Noch mehr Druck auf d4." },
+        { "san": "Nbd2", "why": "Der letzte Baustein: Der Springer deckt e4 und f3 und kann später nach e5 oder über f3 springen. Jetzt folgen 0-0 und der Plan Se5 nebst f4." }
+      ]
+    },
+    {
+      "id": "qb6",
+      "name": "…c5 und …Db6: Angriff auf b2",
+      "summary": "Schwarz nutzt aus, dass dein Läufer c1 fehlt. Du deckst b2 mit der Dame.",
+      "moves": [
+        { "san": "d4" },
+        { "san": "d5" },
+        { "san": "Bf4" },
+        { "san": "c5", "why": "Schwarz greift sofort d4 an." },
+        { "san": "e3", "why": "Stützt d4. Schlägt Schwarz auf d4, nimmst du mit dem Bauern zurück und behältst ein starkes Zentrum." },
+        { "san": "Nc6", "why": "Schwarz bringt eine weitere Figur gegen d4." },
+        { "san": "c3", "why": "Das Bauerndreieck: d4 ist jetzt doppelt gestützt." },
+        { "san": "Qb6", "why": "Die Dame greift b2 an – den schwachen Punkt im Londoner System, weil der Läufer c1 fehlt." },
+        { "san": "Qb3", "why": "Deckt b2 und bietet den Damentausch an. Tauscht Schwarz, öffnet axb3 deinem Turm die a-Linie." },
+        { "san": "c4", "why": "Schwarz vertreibt deine Dame und gewinnt Raum am Damenflügel." },
+        { "san": "Qc2", "why": "Die Dame steht hier gut: Sie deckt b2 nicht mehr direkt, zielt aber über die Diagonale nach h7. Weiter geht es mit Sd2, Sf3, Le2 und Rochade." }
+      ]
+    },
+    {
+      "id": "qb6-trap",
+      "name": "Zu frühes …Db6: der Trick mit Sc3",
+      "summary": "Wenn Schwarz b2 zu früh angreift, kann der Bauernraub schiefgehen.",
+      "moves": [
+        { "san": "d4" },
+        { "san": "d5" },
+        { "san": "Bf4" },
+        { "san": "c5" },
+        { "san": "e3" },
+        { "san": "Qb6", "why": "Schwarz greift b2 an, bevor er Figuren entwickelt hat." },
+        { "san": "Nc3", "why": "Du gibst b2 bewusst her! Schlägt die Dame, springst du nach b5 und drohst Sc7+ mit Gabel gegen König und Turm." },
+        { "san": "Qxb2", "why": "Schwarz nimmt den Bauern – das ist riskant." },
+        { "san": "Nb5", "why": "Drohung Sc7+ mit Gabel gegen König e8 und Turm a8. Außerdem kann der Turm nach b1 und die Dame jagen. Für den Bauern hast du einen großen Entwicklungsvorsprung." }
+      ]
+    },
+    {
+      "id": "kid",
+      "name": "Gegen …Sf6 und …g6 (Königsindisch-Aufbau)",
+      "summary": "Schwarz stellt den Läufer nach g7. Du bleibst bei deinem Aufbau und baust ein Fluchtfeld für den Läufer.",
+      "moves": [
+        { "san": "d4" },
+        { "san": "Nf6", "why": "Schwarz entwickelt zuerst den Springer und hält sich offen, wo seine Bauern hinkommen." },
+        { "san": "Bf4", "why": "Auch gegen …Sf6 kommt der Läufer früh raus – bevor e3 ihn einsperrt." },
+        { "san": "g6", "why": "Schwarz will den Läufer nach g7 stellen (Fianchetto). Er zielt dann über die lange Diagonale auf dein Zentrum." },
+        { "san": "e3", "why": "Stützt d4, das jetzt vom Läufer g7 ins Visier genommen wird." },
+        { "san": "Bg7", "why": "Der Läufer steht auf der langen Diagonale." },
+        { "san": "Nf3", "why": "Entwicklung. Der Springer blockt außerdem die lange Diagonale des Läufers g7." },
+        { "san": "O-O", "why": "Schwarz rochiert früh." },
+        { "san": "Be2", "why": "Gegen den Königsindisch-Aufbau steht der Läufer auf e2 solide; auf d3 würde er gegen die g6-Mauer beißen. Danach rochierst du." },
+        { "san": "d6", "why": "Schwarz bereitet …e5 vor, um dein Zentrum anzugreifen." },
+        { "san": "h3", "why": "Ein Fluchtfeld für den Läufer f4 – nach …Sh5 kann er nach h2 zurück und bleibt erhalten. Danach folgen 0-0, c3 und Sbd2." }
+      ]
+    },
+    {
+      "id": "nf6-e6",
+      "name": "Gegen …Sf6, …e6 und …c5",
+      "summary": "Eine andere Zugfolge – am Ende steht derselbe Aufbau wie in der Hauptlinie.",
+      "moves": [
+        { "san": "d4" },
+        { "san": "Nf6" },
+        { "san": "Bf4" },
+        { "san": "e6", "why": "Schwarz öffnet den Läufer f8." },
+        { "san": "e3", "why": "Stützt d4 und öffnet deinen Läufer f1." },
+        { "san": "c5", "why": "Schwarz greift d4 an." },
+        { "san": "c3", "why": "Das Bauerndreieck c3–d4–e3 hält das Zentrum." },
+        { "san": "Nc6", "why": "Mehr Druck auf d4." },
+        { "san": "Nd2", "why": "Hier kommt zuerst der Damenspringer: Er deckt e4 und c4, und der Königsspringer kann danach trotzdem nach f3." },
+        { "san": "d5", "why": "Schwarz besetzt das Zentrum." },
+        { "san": "Ngf3", "why": "Jetzt kommt auch der zweite Springer. Beide Springer stehen nebeneinander und decken sich gegenseitig." },
+        { "san": "Bd6", "why": "Schwarz bietet wieder den Läufertausch an." },
+        { "san": "Bg3", "why": "Wie in der Hauptlinie: Du behältst deinen Läufer." },
+        { "san": "O-O", "why": "Schwarz rochiert." },
+        { "san": "Bd3", "why": "Der Läufer zielt auf h7. Das ist genau die Stellung aus der Hauptlinie – zwei Wege, ein Ziel." }
+      ]
+    }
+  ]
+}
