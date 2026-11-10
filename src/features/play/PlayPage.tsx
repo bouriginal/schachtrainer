@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import { useStore } from 'zustand'
 import { kingSquare, toPgn } from '../../core/chess/game'
+import { buildHints } from '../../core/coach/hints'
 import { suggestPlans } from '../../core/coach/plans'
 import { STRENGTH_LEVELS, getStrength } from '../../core/engine/strength'
 import { getEngine, getGameRepository } from '../../services'
@@ -14,6 +15,7 @@ import { loadSettings, saveSettings, type CoachSettings } from '../coach/setting
 import { fetchClaudeAvailable } from '../coach/useClaudeExplain'
 import { createPlayStore } from './playStore'
 import { vibrate } from '../../ui/feedback'
+import { Icon } from '../../ui/Icon'
 
 const ARROW_COLOR = { best: 'rgba(22, 163, 74, 0.85)', threat: 'rgba(220, 38, 38, 0.8)', played: 'rgba(120,120,120,0.6)' }
 
@@ -52,6 +54,12 @@ export function PlayPage() {
   const [copied, setCopied] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [claudeAvailable, setClaudeAvailable] = useState(false)
+  /** Hinweisstufe für die aktuelle Stellung (0 = keiner) */
+  const [hint, setHint] = useState<{ fen: string; level: number }>({ fen: '', level: 0 })
+  /** Lesemodus (Handy): kleineres Brett, mehr Platz für Text */
+  const [reading, setReading] = useState(false)
+  const panelRef = useRef<HTMLElement>(null)
+  const hintRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     void fetchClaudeAvailable().then(setClaudeAvailable)
@@ -69,6 +77,13 @@ export function PlayPage() {
     if (s.review && (s.review.moveClass === 'mistake' || s.review.moveClass === 'blunder')) vibrate('error')
   }, [s.review])
 
+  // Bei einer Pause nach einem Fehler: automatisch Lesemodus, damit die Erklärung Platz hat
+  const [prevPaused, setPrevPaused] = useState(s.paused)
+  if (prevPaused !== s.paused) {
+    setPrevPaused(s.paused)
+    if (s.paused) setReading(true)
+  }
+
   const fen = s.currentFen()
   const last = s.moves[s.moves.length - 1]
   const playerSide = s.playerColor === 'w' ? 'white' : 'black'
@@ -78,10 +93,21 @@ export function PlayPage() {
   const playerToMove = !over && !s.paused && !s.reviewing && !s.engineThinking && s.status.turn === s.playerColor
 
   // Plan-Ideen für die aktuelle Stellung (nur wenn du am Zug bist)
+  const currentAnalysis = s.analysis && s.analysis.fen === fen ? s.analysis : null
   const plans = useMemo(
-    () => (settings.enabled && playerToMove ? suggestPlans(fen, s.playerColor) : null),
-    [settings.enabled, playerToMove, fen, s.playerColor],
+    () => (settings.enabled && playerToMove ? suggestPlans(fen, s.playerColor, 3, currentAnalysis ?? undefined) : null),
+    [settings.enabled, playerToMove, fen, s.playerColor, currentAnalysis],
   )
+  const hints = useMemo(() => (playerToMove && currentAnalysis ? buildHints(fen, currentAnalysis) : []), [playerToMove, currentAnalysis, fen])
+  const hintLevel = hint.fen === fen ? hint.level : 0
+  const shownHint = hintLevel > 0 ? hints[hintLevel - 1] : null
+
+  // Neuer Hinweis: Karte im Panel nach oben holen (nur das Panel scrollen, nie die Seite)
+  useEffect(() => {
+    const panel = panelRef.current
+    const card = hintRef.current
+    if (panel && card && hintLevel > 0) panel.scrollTo({ top: Math.max(0, card.offsetTop - panel.offsetTop - 8), behavior: 'smooth' })
+  }, [hintLevel])
   const activePlan = plans?.find((p) => p.id === selectedPlan) ?? null
 
   // Pfeile/Markierungen des Coaches nur, solange das Brett die besprochene Stellung zeigt
@@ -91,6 +117,8 @@ export function PlayPage() {
   const highlights: Record<string, BoardHighlight> = {}
   if (reviewOnBoard) Object.assign(highlights, review.highlights)
   if (activePlan) for (const sq of activePlan.squares) highlights[sq] = 'plan'
+  if (shownHint?.square) highlights[shownHint.square] = 'plan'
+  if (shownHint?.arrow) arrows.push({ from: shownHint.arrow.from, to: shownHint.arrow.to, color: 'rgba(37, 99, 235, 0.85)' })
 
   const marks: Record<number, MoveMark> = {}
   if (settings.enabled) {
@@ -123,7 +151,7 @@ export function PlayPage() {
   }
 
   return (
-    <div className="play-layout">
+    <div className={`play-layout ${reading ? 'reading' : ''}`}>
       <section className="board-area">
         <EvalBar score={s.evaluation?.fen === fen ? s.evaluation.score : null} orientation={orientation} />
         <Board
@@ -132,7 +160,9 @@ export function PlayPage() {
           movableColor={playerToMove ? s.playerColor : null}
           onMove={(from, to, promo) => {
             setSelectedPlan(null)
-            return store.getState().playerMove(from, to, promo)
+            const ok = store.getState().playerMove(from, to, promo)
+            if (ok) setReading(false)
+            return ok
           }}
           lastMove={last ? { from: last.from, to: last.to } : null}
           checkSquare={s.status.inCheck ? kingSquare(fen, s.status.turn) : null}
@@ -141,10 +171,28 @@ export function PlayPage() {
         />
       </section>
 
-      <aside className="side-panel">
+      <aside className="side-panel" ref={panelRef}>
+        <button type="button" className="sheet-handle" onClick={() => setReading((r) => !r)} aria-expanded={reading}>
+          <span className="grip" aria-hidden="true" />
+          {reading ? 'Großes Brett' : 'Mehr Platz für Text'}
+        </button>
         <div className={`status ${over ? 'status-over' : ''}`} role="status" aria-live="polite">
-          {statusText}
+          <span>{statusText}</span>
+          {over && s.moves.length >= 4 && (
+            <Link className="status-action" to={`/analyse/${s.gameId}`}>
+              🔍 Analysieren
+            </Link>
+          )}
         </div>
+        {shownHint && (
+          <div className="hint-card" role="status" aria-live="polite" ref={hintRef}>
+            <div className="hint-head">
+              <span className="hint-badge">💡 Hinweis {shownHint.level}/3</span>
+              <strong>{shownHint.title}</strong>
+            </div>
+            <p>{shownHint.text}</p>
+          </div>
+        )}
         {s.engineError && <div className="error">{s.engineError}</div>}
         {setupOpen && (
           <NewGameForm
@@ -156,12 +204,6 @@ export function PlayPage() {
               s.newGame({ playerColor, level })
             }}
           />
-        )}
-
-        {over && s.moves.length >= 4 && (
-          <Link className="button primary" to={`/analyse/${s.gameId}`}>
-            🔍 Partie analysieren
-          </Link>
         )}
 
         {settings.enabled && (
@@ -225,18 +267,41 @@ export function PlayPage() {
         </details>
 
         {/* Aktionsleiste: am Handy fest unten am Daumen */}
-        <div className="button-row action-bar">
+        <div className="action-bar icon-bar">
           <button type="button" onClick={() => s.undo()} disabled={s.moves.length === 0} aria-label="Zug zurücknehmen">
-            ↶ Zurück
+            <Icon name="undo" size={22} />
+            <span>Zurück</span>
+          </button>
+          <button
+            type="button"
+            className={hintLevel > 0 ? 'active' : ''}
+            onClick={() => setHint({ fen, level: Math.min(3, hintLevel + 1) })}
+            disabled={!playerToMove || hints.length === 0 || hintLevel >= 3}
+            aria-label={hintLevel === 0 ? 'Hinweis anzeigen' : 'Nächster Hinweis'}
+            title={playerToMove && hints.length === 0 ? 'Engine rechnet noch …' : undefined}
+          >
+            <Icon name="bulb" size={22} />
+            <span>{hintLevel === 0 ? 'Hinweis' : hintLevel < 3 ? 'Mehr' : 'Lösung'}</span>
           </button>
           <button type="button" onClick={() => setFlipped((f) => !f)} aria-label="Brett drehen">
-            ⇅ Drehen
+            <Icon name="flip" size={22} />
+            <span>Drehen</span>
           </button>
-          <button type="button" onClick={() => s.resign()} disabled={over}>
-            ⚑ Aufgeben
+          <button type="button" onClick={() => s.resign()} disabled={over} aria-label="Aufgeben">
+            <Icon name="flag" size={22} />
+            <span>Aufgeben</span>
           </button>
-          <button type="button" className="primary" onClick={() => setSetupOpen((o) => !o)}>
-            ＋ Neu
+          <button
+            type="button"
+            className="primary"
+            onClick={() => {
+              setSetupOpen((o) => !o)
+              setReading(true)
+            }}
+            aria-label="Neue Partie"
+          >
+            <Icon name="plus" size={22} />
+            <span>Neu</span>
           </button>
         </div>
       </aside>

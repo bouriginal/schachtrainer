@@ -40,7 +40,11 @@ src/
       explain.ts   reviewMove(): Engine-Analysen vor/nach dem Zug + Heuristiken → MoveReview
                    (Klassifikation, Sätze, Pfeile, Markierungen); composeText wählt aus
       text/de.ts   ALLE deutschen Formulierungen (Logik nie hier, Texte nie in Heuristiken)
-      plans.ts     suggestPlans(): 1–2 Pläne pro Stellung, nach Dringlichkeit geordnet
+      plans.ts     suggestPlans(fen, color, max, analysis?): bis zu 3 Ideen – Gefahr (Matt-
+                   drohung, hängende Figur), "Konkrete Idee" aus der Engine-PV mit Zweck je Zug,
+                   Entwicklung, Rochade, Vorposten, Königsangriff, Figur mit Zielfeld verbessern
+      hints.ts     buildHints(): 3 Stufen – Richtung, Figur (Feld), Zug mit Begründung
+      threats.ts   threatsAgainst(): Nullzug – Mattdrohung und hängende eigene Figuren
       llm/prompt.ts Prompt + Validierung für "Genauer erklären" (auch vom Node-Proxy geladen)
     openings/      Eröffnungstrainer-Logik (rein)
       repertoire.ts buildRepertoire(): Linien (JSON) → Stellungsgraph; Schlüssel = FEN ohne
@@ -119,7 +123,14 @@ server/claudeProxy.ts     Vite-Middleware /api/coach/{status,explain}; Key aus .
   Worker hält ALLES vor, auch Engine-WASM und Puzzles → komplett offline nutzbar. Im
   eingebetteten Vorschau-Browser blockiert die Umgebung Service Worker – zum Testen echtes
   Chrome nehmen. Daten liegen pro Gerät; Abgleich über Backup (Einstellungen).
-- **Handy-Layout:** Brettseiten nutzen `.play-layout` (füllt die Höhe, Brett randlos oben,
+- **Texte:** describeMoveFinding (Vergangenheit, eigener Zug), describeBestFinding ("damit hättest
+  du …"), describePurpose (Gegenwart, Hinweise), shortPurpose (Stichwort, Plan-Ideen). saves_piece
+  unterscheidet "decken" (Figur blieb stehen) und "in Sicherheit bringen" (weggezogen).
+- **Design:** Grundwerte als CSS-Variablen ganz am Ende von index.css ("Modernes Design v2"),
+  Hell/Dunkel per prefers-color-scheme. Karten: .status/.review/.plan-card/.card … mit --shadow-sm.
+- **Handy-Layout:** Lesemodus `.play-layout.reading` (kleineres Brett), Umschalter `.sheet-handle`.
+  Kinder von `.side-panel` haben flex-shrink: 0 – sonst werden Karten zusammengestaucht.
+- **Handy-Layout (Grundlage):** Brettseiten nutzen `.play-layout` (füllt die Höhe, Brett randlos oben,
   `.side-panel` scrollt) und eine `.action-bar` als LETZTES Kind des Panels (sticky unten).
 - **Lizenz:** Projekt steht unter GPL-3.0-or-later (wegen Stockfish).
 - **Deployment:** GitHub `bouriginal/schachtrainer` (main) → Vercel-Projekt `schachtrainer`, jeder

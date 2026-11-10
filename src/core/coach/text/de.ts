@@ -40,6 +40,9 @@ export interface TextContext {
   mover: Color
 }
 
+/** saves_piece: blieb die bedrohte Figur stehen (= wurde gedeckt) oder zog sie weg? */
+const defended = (f: Finding) => f.kind === 'saves_piece' && f.squares[0] === f.square
+
 /** Ein Satz pro Finding über den eigenen (gespielten) Zug */
 export function describeMoveFinding(f: Finding, { mover }: TextContext): string {
   const opp = sideName(mover === 'w' ? 'b' : 'w')
@@ -84,7 +87,7 @@ export function describeMoveFinding(f: Finding, { mover }: TextContext): string 
     case 'removes_attacker':
       return `Gut: Du schlägst ${ACC_ENEMY[f.piece!]}, der ${ACC_OWN[f.targets![0].type]} auf ${f.targets![0].square} bedroht hat.`
     case 'saves_piece':
-      return `Gut: Du bringst ${ACC_OWN[f.piece!]} aus der Gefahr.`
+      return defended(f) ? `Gut: Du deckst ${ACC_OWN[f.piece!]} auf ${f.square}.` : `Gut: Du bringst ${ACC_OWN[f.piece!]} aus der Gefahr.`
     case 'passed_pawn':
       return `Du hast jetzt einen Freibauern auf ${f.square} – kein gegnerischer Bauer kann ihn mehr aufhalten.`
   }
@@ -102,13 +105,67 @@ export function describeBestFinding(f: Finding): string | null {
     case 'removes_attacker':
       return `damit hättest du ${ACC_ENEMY[f.piece!]} auf ${f.square} geschlagen, der ${ACC_OWN[f.targets![0].type]} auf ${f.targets![0].square} angreift`
     case 'saves_piece':
-      return `damit hättest du ${ACC_OWN[f.piece!]} auf ${f.square} in Sicherheit gebracht`
+      return defended(f)
+        ? `damit hättest du ${ACC_OWN[f.piece!]} auf ${f.square} gedeckt`
+        : `damit hättest du ${ACC_OWN[f.piece!]} auf ${f.square} in Sicherheit gebracht`
     case 'castled':
       return 'damit wäre dein König in Sicherheit gewesen'
     case 'develops':
       return `damit hättest du ${ACC_OWN[f.piece!]} entwickelt`
     case 'center_pawn':
       return 'damit hättest du das Zentrum besetzt'
+    default:
+      return null
+  }
+}
+
+/** Was ein (empfohlener) Zug bewirkt – Gegenwart, für Hinweise: "Lb5 entwickelt deinen Läufer." */
+export function describePurpose(f: Finding): string | null {
+  switch (f.kind) {
+    case 'gives_mate':
+      return 'setzt matt'
+    case 'wins_material':
+      return `gewinnt ${ACC_ENEMY[f.piece!]} auf ${f.square} – er ist nicht ausreichend gedeckt`
+    case 'fork':
+      return `greift ${targetList(f.targets!, false)} gleichzeitig an (Gabel)`
+    case 'castled':
+      return 'bringt deinen König in Sicherheit'
+    case 'develops':
+      return `entwickelt ${ACC_OWN[f.piece!]}`
+    case 'center_pawn':
+      return 'besetzt das Zentrum'
+    case 'removes_attacker':
+      return `schlägt ${ACC_ENEMY[f.piece!]} auf ${f.square}, der ${ACC_OWN[f.targets![0].type]} bedroht`
+    case 'saves_piece':
+      return defended(f) ? `deckt ${ACC_OWN[f.piece!]} auf ${f.square}` : `bringt ${ACC_OWN[f.piece!]} in Sicherheit`
+    case 'passed_pawn':
+      return 'schafft einen Freibauern'
+    default:
+      return null
+  }
+}
+
+/** Kurzer Zweck eines Zugs für Plan-Ideen: "Entwicklung", "Rochade" … */
+export function shortPurpose(f: Finding): string | null {
+  switch (f.kind) {
+    case 'gives_mate':
+      return 'Matt'
+    case 'wins_material':
+      return `${NAME[f.piece!]} gewinnen`
+    case 'fork':
+      return 'Doppelangriff'
+    case 'castled':
+      return 'König in Sicherheit'
+    case 'develops':
+      return `${NAME[f.piece!]} entwickeln`
+    case 'center_pawn':
+      return 'Zentrum besetzen'
+    case 'removes_attacker':
+      return 'Angreifer schlagen'
+    case 'saves_piece':
+      return defended(f) ? `${NAME[f.piece!]} decken` : `${NAME[f.piece!]} retten`
+    case 'passed_pawn':
+      return 'Freibauer schaffen'
     default:
       return null
   }

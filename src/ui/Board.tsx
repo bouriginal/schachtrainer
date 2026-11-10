@@ -30,10 +30,10 @@ export interface BoardProps {
 }
 
 const COLORS = {
-  light: '#eeeed2',
-  dark: '#769656',
-  lastMove: 'rgba(255, 213, 0, 0.42)',
-  selected: 'rgba(20, 85, 200, 0.45)',
+  light: '#e9ebd9',
+  dark: '#6f9877',
+  lastMove: 'rgba(255, 210, 70, 0.5)',
+  selected: 'rgba(59, 130, 246, 0.45)',
   danger: 'rgba(220, 38, 38, 0.5)',
   good: 'rgba(22, 163, 74, 0.45)',
   plan: 'rgba(37, 99, 235, 0.38)',

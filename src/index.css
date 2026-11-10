@@ -395,3 +395,170 @@ button.danger { background: var(--blunder); border-color: var(--blunder); color:
   .action-bar { display: flex; flex-wrap: nowrap; gap: 6px; }
   .action-bar > * { flex: 1 1 0; min-width: 0; padding: 6px 4px; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+/* ═════════════ Modernes Design (v2) ═════════════
+   Überschreibt die bisherigen Grundwerte: ruhigere Flächen, Karten mit weichen Schatten,
+   abgerundete Knöpfe, durchscheinende Leisten. Hell/Dunkel folgt dem System. */
+:root {
+  --bg: #f3f4f0;
+  --surface: #ffffff;
+  --surface-2: #eef0ea;
+  --text: #15181c;
+  --muted: #646b72;
+  --border: #e2e5de;
+  --accent: #1d8549;
+  --accent-2: #27a35b;
+  --accent-text: #ffffff;
+  --good: #16803c;
+  --inaccuracy: #b7791f;
+  --mistake: #d0601c;
+  --blunder: #c62828;
+  --info: #2563eb;
+  --radius: 16px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 16, .06), 0 2px 8px -2px rgba(16, 24, 16, .08);
+  --shadow-md: 0 6px 24px -8px rgba(16, 24, 16, .22);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1013;
+    --surface: #171a1f;
+    --surface-2: #21252c;
+    --text: #eceef1;
+    --muted: #9aa3ad;
+    --border: #2a2f37;
+    --accent: #2fb866;
+    --accent-2: #45d17f;
+    --accent-text: #06120b;
+    --good: #4ade80;
+    --inaccuracy: #fbbf24;
+    --mistake: #fb923c;
+    --blunder: #f87171;
+    --info: #60a5fa;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4), 0 2px 10px -2px rgba(0, 0, 0, .45);
+    --shadow-md: 0 8px 30px -8px rgba(0, 0, 0, .7);
+  }
+}
+body { letter-spacing: -0.005em; -webkit-font-smoothing: antialiased; }
+h1 { font-size: 1.75rem; letter-spacing: -0.02em; font-weight: 750; }
+h2 { letter-spacing: -0.01em; }
+
+/* Knöpfe */
+button, a.button, label.button {
+  border: 1px solid transparent; background: var(--surface-2); border-radius: 12px; font-weight: 600;
+  transition: transform .08s ease, background-color .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+button:hover:not(:disabled), a.button:hover { border-color: var(--border); background: color-mix(in srgb, var(--surface-2) 70%, var(--border)); }
+button:active:not(:disabled), a.button:active { transform: scale(.97); }
+button.primary, a.button.primary {
+  background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-text); border-color: transparent;
+  box-shadow: 0 6px 16px -8px var(--accent);
+}
+button.primary:hover:not(:disabled), a.button.primary:hover { filter: brightness(1.05); background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
+button.link { background: none; }
+
+/* Karten */
+.status, .review, .plan-card, .card, .module-card, .line-item, .suggestions li, .tile, .menu-list, .import-box,
+.settings, .new-game, .hint-card, .pattern, .ideas li, .confirm-box, .move-list, .coach-thinking {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+}
+.module-card { opacity: 1; transition: transform .15s ease, box-shadow .15s ease; }
+.module-card.ready { border-color: var(--border); }
+.module-card.ready:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.module-card h2 { font-size: 1.05rem; }
+.review { border-left: 1px solid var(--border); position: relative; overflow: hidden; }
+.review::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--tone, var(--border)); }
+.review-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .9rem;
+  background: color-mix(in srgb, var(--tone, var(--muted)) 14%, transparent); color: var(--tone, var(--text));
+}
+.trainer-fb.fb-info { --tone: var(--info); }
+.status { font-weight: 650; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.status-over { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.status-action {
+  flex: none; font-size: .88rem; padding: 6px 12px; border-radius: 999px; text-decoration: none; font-weight: 650;
+  background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: var(--accent-text) !important;
+}
+.badge { background: var(--surface-2); }
+.segmented label { border-radius: 12px; background: var(--surface-2); border-color: transparent; }
+.segmented label.active { background: var(--surface); border-color: var(--accent); box-shadow: var(--shadow-sm); }
+select, textarea { border-radius: 12px; background: var(--surface); }
+.move-row:nth-child(even) { background: var(--surface-2); }
+.progress, .rb-track { background: var(--surface-2); border-color: transparent; }
+.progress > div, .rb-fill { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+
+/* Plan-Ideen */
+.plan { background: var(--surface-2); border-radius: 12px; }
+.plan-kind { align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+.plan-kind.engine { background: color-mix(in srgb, var(--info) 15%, transparent); color: var(--info); }
+.plan-kind.danger { background: color-mix(in srgb, var(--blunder) 15%, transparent); color: var(--blunder); }
+.plan span:not(.plan-kind) { color: var(--muted); }
+
+/* Hinweis-Karte */
+.hint-card { padding: 12px 14px; border-left: 1px solid var(--border); position: relative; overflow: hidden; }
+.hint-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--info); }
+.hint-card p { margin: 6px 0 0; }
+.hint-head { display: flex; flex-direction: column; gap: 4px; }
+.hint-badge { align-self: flex-start; font-size: .78rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, var(--info) 14%, transparent); color: var(--info); }
+
+/* Kopfzeile & Tab-Leiste: durchscheinend */
+.app-header {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { font-weight: 800; letter-spacing: -0.02em; }
+.top-nav a { color: var(--muted) !important; font-weight: 550; }
+.top-nav a.active { color: var(--text) !important; background: var(--surface-2); }
+
+/* Brett: am Desktop als "Karte" mit runden Ecken */
+@media (min-width: 768px) {
+  .board-wrap { border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-md); }
+  .eval-bar { border-radius: 999px; }
+}
+.eval-bar { background: #2b2e33; }
+.eval-white { background: #f6f6f1; }
+
+/* Aktionsleiste mit Icons (Spielen) */
+.icon-bar { display: grid !important; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.icon-bar button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; padding: 6px 2px; font-size: .74rem; font-weight: 650; }
+.icon-bar button.active { background: color-mix(in srgb, var(--info) 14%, var(--surface)); color: var(--info); border-color: color-mix(in srgb, var(--info) 35%, transparent); }
+.sheet-handle { display: none; }
+
+@media (max-width: 767px) {
+  h1 { font-size: 1.4rem; }
+  .tab-bar {
+    background: color-mix(in srgb, var(--surface) 85%, transparent);
+    -webkit-backdrop-filter: saturate(1.6) blur(16px); backdrop-filter: saturate(1.6) blur(16px);
+  }
+  .tab-bar a svg { padding: 3px 16px; border-radius: 999px; box-sizing: content-box; transition: background-color .15s ease; }
+  .tab-bar a.active svg { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+
+  /* bessere Lesbarkeit im Panel */
+  .side-panel { font-size: 1.02rem; line-height: 1.5; gap: 10px; }
+  .review p, .hint-card p { line-height: 1.5; }
+  .action-bar { background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .icon-bar button { font-size: .7rem; min-height: 54px; overflow: visible; white-space: normal; }
+
+  /* Griff zum Umschalten zwischen großem Brett und Lesemodus */
+  .sheet-handle {
+    display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; min-height: 34px;
+    background: none; border: 0; box-shadow: none; padding: 2px 0 4px; color: var(--muted); font-size: .75rem; font-weight: 600;
+  }
+  .sheet-handle .grip { width: 40px; height: 5px; border-radius: 999px; background: var(--border); }
+  .sheet-handle:hover:not(:disabled) { background: none; border-color: transparent; }
+
+  /* Lesemodus: Brett kleiner, Text bekommt den Platz */
+  .play-layout.reading .board-area {
+    max-width: min(66vw, calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--safe-t) - var(--safe-b) - 330px));
+    padding-top: 8px;
+  }
+  .play-layout.reading .eval-bar { border-radius: 999px; }
+  .play-layout .board-area, .play-layout .side-panel { transition: max-width .25s ease; }
+}
+@media (max-width: 767px) {
+  /* Dem Text grundsätzlich genug Platz lassen; bei großen Displays bleibt das Brett trotzdem voll breit */
+  .board-area, .trainer-board { max-width: min(100vw, calc(100dvh - var(--header-h) - var(--tabbar-h) - var(--safe-t) - var(--safe-b) - 260px)); }
+}
+/* Karten im Panel nie zusammenstauchen – das Panel scrollt stattdessen */
+.side-panel > * { flex-shrink: 0; }

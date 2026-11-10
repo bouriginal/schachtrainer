@@ -11,9 +11,13 @@ import {
   PIECE_VALUE,
   withTurn,
 } from '../chess/board'
-import { MINOR_HOME } from './context'
+import type { AnalysisResult } from '../engine/types'
+import { buildContext, MINOR_HOME } from './context'
+import { moveFeatures } from './explain'
+import { sortByWeight } from './findings'
 import { pawnStructure } from './heuristics/pawnStructure'
-import { joinList } from './text/de'
+import { joinList, shortPurpose, showMove } from './text/de'
+import { threatsAgainst } from './threats'
 
 /**
  * Plan-Modul: schlägt für eine Stellung 1–2 konkrete, verständliche Pläne vor.
@@ -25,6 +29,8 @@ export interface Plan {
   title: string
   why: string
   squares: Square[]
+  /** Art der Idee – für die Anzeige (z. B. "Konkrete Idee" aus der Engine) */
+  kind?: 'danger' | 'engine' | 'strategy'
 }
 
 const FILES = 'abcdefgh'
@@ -39,7 +45,57 @@ function isEndgame(chess: Chess): boolean {
   return queens === 0 ? nonPawn <= 26 : nonPawn <= 12
 }
 
-export function suggestPlans(fen: string, color: Color, max = 2): Plan[] {
+/**
+ * Konkrete Idee aus der Engine-Hauptvariante: deine nächsten 1–2 Züge samt Zweck.
+ * Macht die Vorschläge stellungsspezifisch, statt immer dieselben Faustregeln zu nennen.
+ */
+function engineIdea(fen: string, color: Color, analysis: AnalysisResult): Plan | null {
+  const pv = analysis.lines[0]?.pv ?? []
+  if (analysis.fen.split(' ').slice(0, 4).join(' ') !== fen.split(' ').slice(0, 4).join(' ') || pv.length === 0) return null
+  const steps: { san: string; purpose: string | null; from: Square; to: Square }[] = []
+  let current = fen
+  for (let i = 0; i < Math.min(pv.length, 4); i++) {
+    const ctx = buildContext(current, pv[i])
+    if (!ctx) break
+    if (ctx.mover === color) {
+      const top = sortByWeight(moveFeatures(ctx, 'best')).find((f) => f.polarity > 0)
+      steps.push({ san: showMove(ctx.move.san, color), purpose: top ? shortPurpose(top) : null, from: ctx.move.from, to: ctx.move.to })
+    }
+    current = ctx.fenAfter
+    if (steps.length === 2) break
+  }
+  if (steps.length === 0) return null
+  const purposes = steps.map((st) => st.purpose).filter((x): x is string => !!x)
+  const title = steps.length === 2 ? `Idee: ${steps[0].san}, danach ${steps[1].san}` : `Idee: ${steps[0].san}`
+  const why = purposes.length
+    ? `Ziel: ${joinList(purposes)}. Überleg dir, warum die Züge in dieser Reihenfolge Sinn ergeben.`
+    : 'So verbesserst du laut Engine deine Stellung am meisten. Frag dich: Welche Figur wird dadurch aktiver, welche Schwäche des Gegners entsteht?'
+  return { id: 'engine-idea', kind: 'engine', title, why, squares: [steps[0].from, steps[0].to] }
+}
+
+/** Felder, die einem Springer als Vorposten dienen könnten (eigene Bauerndeckung, kein gegnerischer Bauer kann angreifen) */
+function outposts(chess: Chess, color: Color): Square[] {
+  const dir = color === 'w' ? 1 : -1
+  const ranks = color === 'w' ? [4, 5, 6] : [5, 4, 3]
+  const enemyPawns = piecesOf(chess, opposite(color)).filter((p) => p.type === 'p')
+  const out: Square[] = []
+  for (const r of ranks) {
+    for (let f = 1; f <= 6; f++) {
+      const sq = `${FILES[f]}${r}` as Square
+      if (chess.get(sq)) continue
+      const supported = [f - 1, f + 1].some((ff) => {
+        const p = chess.get(`${FILES[ff]}${r - dir}` as Square)
+        return p?.type === 'p' && p.color === color
+      })
+      // kann ein gegnerischer Bauer das Feld jemals angreifen? (Bauer auf Nachbarlinie vor dem Feld)
+      const attackable = enemyPawns.some((e) => Math.abs(fileOf(e.square) - f) === 1 && (Number(e.square[1]) - r) * dir > 0)
+      if (supported && !attackable) out.push(sq)
+    }
+  }
+  return out
+}
+
+export function suggestPlans(fen: string, color: Color, max = 3, analysis?: AnalysisResult): Plan[] {
   const chess = new Chess(fen)
   const plans: Plan[] = []
   const add = (p: Plan) => {
@@ -49,12 +105,25 @@ export function suggestPlans(fen: string, color: Color, max = 2): Plan[] {
   const enemy = opposite(color)
   const endgame = isEndgame(chess)
 
+  // 0. Mattdrohung des Gegners
+  const threats = threatsAgainst(fen, color)
+  if (threats.mateIn1) {
+    add({
+      id: 'stop-mate',
+      kind: 'danger',
+      title: `Verhindere das Matt durch ${showMove(threats.mateIn1.san, enemy)}`,
+      why: 'Der Gegner droht im nächsten Zug Matt. Alles andere ist jetzt unwichtig: decke das Feld, schaffe deinem König Luft oder schlag die angreifende Figur.',
+      squares: [threats.mateIn1.from, threats.mateIn1.to],
+    })
+  }
+
   // 1. Eigene Figur in Gefahr
   const mineExposed = exposedPieces(chess, color).filter((e) => e.expectedLoss >= 1)
   if (mineExposed.length) {
     const e = mineExposed[0]
     add({
       id: 'save-piece',
+      kind: 'danger',
       title: `Sichere ${ACC[e.type]} auf ${e.square}`,
       why: `Er wird angegriffen und ist nicht ausreichend gedeckt. Bevor du etwas Neues planst: erst die Figur wegziehen, decken oder den Angreifer abtauschen.`.replace(
         'Er wird',
@@ -62,6 +131,12 @@ export function suggestPlans(fen: string, color: Color, max = 2): Plan[] {
       ),
       squares: [e.square, ...e.attackers],
     })
+  }
+
+  // 1b. Konkrete Idee aus der Engine-Variante
+  if (analysis && chess.turn() === color) {
+    const idea = engineIdea(fen, color, analysis)
+    if (idea) add(idea)
   }
 
   // 2. Gegnerische Figur ungedeckt (nur wenn wir am Zug sind)
@@ -188,8 +263,54 @@ export function suggestPlans(fen: string, color: Color, max = 2): Plan[] {
     })
   }
 
+  // 10b. Materialrückstand: Komplikationen statt Tausch
+  if (materialBalance(chess, color) <= -2 && !endgame) {
+    add({
+      id: 'behind',
+      title: 'Du liegst zurück: Bleib aktiv',
+      why: 'Mit weniger Material helfen dir Tauschaktionen nicht. Behalte deine Figuren, schaffe Drohungen gegen den König und suche Stellungen, in denen der Gegner Fehler machen kann.',
+      squares: [],
+    })
+  }
+
+  // 12. Vorposten für einen Springer
+  if (!endgame && fullmove >= 8) {
+    const posts = outposts(chess, color)
+    const knights = piecesOf(chess, color).filter((p) => p.type === 'n')
+    if (posts.length && knights.length) {
+      const target = posts.sort((a, b) => Math.abs(3.5 - fileOf(a)) - Math.abs(3.5 - fileOf(b)))[0]
+      add({
+        id: 'outpost',
+        title: `Bring einen Springer auf den Vorposten ${target}`,
+        why: `Auf ${target} wird der Springer von einem Bauern gedeckt, und kein gegnerischer Bauer kann ihn je vertreiben. Von dort greift er tief ins gegnerische Lager.`,
+        squares: [target, knights[0].square],
+      })
+    }
+  }
+
+  // 13. Königsangriff, wenn der gegnerische Bauernschutz Lücken hat
+  const enemyKing = chess.findPiece({ type: 'k', color: enemy })[0]
+  if (!endgame && enemyKing && 'gh'.includes(enemyKing[0])) {
+    const shieldRank = enemy === 'w' ? 2 : 7
+    const missing = ['f', 'g', 'h'].filter((f) => {
+      const p = chess.get(`${f}${shieldRank}` as Square)
+      const ahead = chess.get(`${f}${shieldRank + (enemy === 'w' ? 1 : -1)}` as Square)
+      return !(p?.type === 'p' && p.color === enemy) && !(ahead?.type === 'p' && ahead.color === enemy)
+    })
+    const attackers = piecesOf(chess, color).filter((p) => p.type === 'q' || p.type === 'r' || p.type === 'b' || p.type === 'n').length
+    if (missing.length && attackers >= 3) {
+      const holes = missing.map((f) => `${f}${shieldRank}`)
+      add({
+        id: 'king-attack',
+        title: 'Greif den gegnerischen König an',
+        why: `Vor dem König fehlt Bauernschutz (${joinList(holes)}). Bring Dame und weitere Figuren in Richtung Königsflügel – gemeinsam können sie dort durchbrechen.`,
+        squares: holes as Square[],
+      })
+    }
+  }
+
   // 11. Rückfall (nur wenn sonst nichts greift): schlechteste Figur verbessern
-  if (plans.length === 0) {
+  if (plans.length < 2 && !plans.some((p) => p.id === 'develop')) {
     const turnChess = withTurn(fen, color)
     if (turnChess) {
       const worst = piecesOf(turnChess, color)
@@ -197,11 +318,26 @@ export function suggestPlans(fen: string, color: Color, max = 2): Plan[] {
         .map((p) => ({ p, mobility: turnChess.moves({ square: p.square }).length }))
         .sort((a, b) => a.mobility - b.mobility)[0]
       if (worst) {
+        // bestes sicheres Zielfeld: maximale Beweglichkeit danach, nicht hängend
+        let bestTarget: Square | null = null
+        let bestMob = worst.mobility
+        for (const m of turnChess.moves({ square: worst.p.square, verbose: true })) {
+          const after = new Chess(m.after)
+          if (exposedPieces(after, color).some((e) => e.square === m.to)) continue
+          const again = withTurn(m.after, color)
+          const mob = again ? again.moves({ square: m.to }).length : 0
+          if (mob > bestMob) {
+            bestMob = mob
+            bestTarget = m.to
+          }
+        }
         add({
           id: 'improve-worst',
-          title: `Verbessere ${ACC[worst.p.type]} auf ${worst.p.square}`,
-          why: `${worst.p.type === 'q' ? 'Sie' : 'Er'} hat kaum gute Felder. Frag dich: Wo würde diese Figur am meisten bewirken – und wie kommt sie dorthin?`,
-          squares: [worst.p.square],
+          title: bestTarget ? `Verbessere ${ACC[worst.p.type]}: z. B. nach ${bestTarget}` : `Verbessere ${ACC[worst.p.type]} auf ${worst.p.square}`,
+          why: bestTarget
+            ? `Auf ${worst.p.square} hat ${worst.p.type === 'q' ? 'sie' : 'er'} nur ${worst.mobility} Züge, auf ${bestTarget} wären es ${bestMob}. Aktive Figuren gewinnen Partien.`
+            : `${worst.p.type === 'q' ? 'Sie' : 'Er'} hat kaum gute Felder. Frag dich: Wo würde diese Figur am meisten bewirken – und wie kommt sie dorthin?`,
+          squares: bestTarget ? [worst.p.square, bestTarget] : [worst.p.square],
         })
       }
     }

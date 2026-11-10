@@ -128,6 +128,8 @@ function PlanCard({ plans, selected, onSelect }: { plans: Plan[]; selected: stri
                 aria-pressed={selected === p.id}
                 onClick={() => onSelect(selected === p.id ? null : p.id)}
               >
+                {p.kind === 'engine' && <span className="plan-kind engine">Konkrete Idee</span>}
+                {p.kind === 'danger' && <span className="plan-kind danger">Achtung</span>}
                 <strong>{p.title}</strong>
                 <span>{p.why}</span>
               </button>

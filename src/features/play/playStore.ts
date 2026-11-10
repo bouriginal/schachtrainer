@@ -31,6 +31,8 @@ export interface PlayState {
   resigned: boolean
   engineThinking: boolean
   evaluation: Evaluation | null
+  /** vollständige Engine-Analyse der aktuellen Stellung (für Hinweise und Plan-Ideen) */
+  analysis: AnalysisResult | null
   engineError: string | null
 
   coach: CoachOptions
@@ -124,7 +126,7 @@ export function createPlayStore(deps: PlayDeps): StoreApi<PlayState> {
 
     const showEvaluation = (r: AnalysisResult) => {
       if (get().currentFen() !== r.fen || !r.lines[0]) return
-      set({ evaluation: { fen: r.fen, score: r.lines[0].score, depth: r.lines[0].depth, bestMove: r.bestMove } })
+      set({ evaluation: { fen: r.fen, score: r.lines[0].score, depth: r.lines[0].depth, bestMove: r.bestMove }, analysis: r })
     }
 
     /** Bewertet die aktuelle Stellung; ist der Spieler am Zug, gleich mit Kandidatenzügen für den Coach. */
@@ -209,6 +211,7 @@ export function createPlayStore(deps: PlayDeps): StoreApi<PlayState> {
       resigned: false,
       engineThinking: false,
       evaluation: null,
+      analysis: null,
       engineError: null,
       review: null,
       reviewing: false,
@@ -268,6 +271,7 @@ export function createPlayStore(deps: PlayDeps): StoreApi<PlayState> {
           review: null,
           reviews,
           evaluation: null,
+          analysis: null,
         })
         persist()
         evaluate(signal)
@@ -315,6 +319,7 @@ export function createPlayStore(deps: PlayDeps): StoreApi<PlayState> {
           resigned: game.reason === 'Aufgegeben',
           engineThinking: false,
           evaluation: null,
+          analysis: null,
           engineError: null,
           review: null,
           reviewing: false,

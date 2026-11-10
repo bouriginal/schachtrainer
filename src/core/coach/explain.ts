@@ -43,7 +43,7 @@ export interface MoveReview {
 }
 
 /** Alle Zug-Heuristiken, die für jeden Zug (gespielt oder bester) gelten */
-function moveFeatures(ctx: MoveContext, subject: 'move' | 'best'): Finding[] {
+export function moveFeatures(ctx: MoveContext, subject: 'move' | 'best'): Finding[] {
   return [
     ...tacticsOfMove(ctx, subject),
     ...kingSafetyOfMove(ctx, subject),

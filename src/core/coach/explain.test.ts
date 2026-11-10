@@ -160,7 +160,7 @@ describe('reviewMove', () => {
     })!
     expect(r.moveClass).toBe('blunder')
     expect(r.sentences[0]).toBe('Danach ist deine Dame auf h4 nicht ausreichend gedeckt – Weiß schlägt mit Sxh4.')
-    expect(r.sentences.at(-1)).toMatch(/^Besser war …Sc6: damit hättest du deinen Bauern auf e5 in Sicherheit gebracht/)
+    expect(r.sentences.at(-1)).toMatch(/^Besser war …Sc6: damit hättest du deinen Bauern auf e5 gedeckt/)
   })
 
   it('liefert null bei illegalem Zug', () => {
