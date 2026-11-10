@@ -121,7 +121,10 @@ server/claudeProxy.ts     Vite-Middleware /api/coach/{status,explain}; Key aus .
   Chrome nehmen. Daten liegen pro Gerät; Abgleich über Backup (Einstellungen).
 - **Handy-Layout:** Brettseiten nutzen `.play-layout` (füllt die Höhe, Brett randlos oben,
   `.side-panel` scrollt) und eine `.action-bar` als LETZTES Kind des Panels (sticky unten).
-- **Lizenz:** Stockfish ist GPL-3.0 → bei Veröffentlichung muss die App GPL-3.0 sein.
+- **Lizenz:** Projekt steht unter GPL-3.0-or-later (wegen Stockfish).
+- **Deployment:** GitHub `bouriginal/schachtrainer` (main) → Vercel-Projekt `schachtrainer`, jeder
+  Push auf main geht automatisch live unter https://schachtrainer-mu.vercel.app. Commits mit der
+  GitHub-noreply-Adresse, nie mit privater E-Mail.
 
 ## Konventionen
 - UI-Texte, Kommentare und Testnamen auf Deutsch; Bezeichner (Code) auf Englisch.

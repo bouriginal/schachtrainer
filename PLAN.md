@@ -1,6 +1,6 @@
 # Schachtrainer – Architektur- und Phasenplan
 
-Stand: 10.11.2026 · Status: **Phasen 1–5 fertig · Phase 6 (Handy-App/PWA) umgesetzt, Deployment offen**
+Stand: 10.11.2026 · Status: **Phasen 1–5 fertig · Phase 6 (Handy-App/PWA) fertig, live auf Vercel**
 
 ## 0. Entscheidungen nach Rückfragen
 - **Brett:** react-chessboard (MIT).

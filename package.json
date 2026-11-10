@@ -42,5 +42,7 @@
     "vite": "^8.3.6",
     "vite-plugin-pwa": "^2.0.0",
     "vitest": "^5.1.0"
-  }
+  },
+  "license": "GPL-3.0-or-later",
+  "description": "Interaktiver Schachtrainer (PWA): Coach, Eröffnungen, Taktik, Endspiele, Partieanalyse"
 }
